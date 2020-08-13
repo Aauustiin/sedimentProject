@@ -1,0 +1,12 @@
+{
+  "name": "sedimentProject",
+  "displayName": "sedimentProject",
+  "expo": {
+    "name": "sedimentProject",
+    "slug": "sedimentProject",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
