@@ -1,12 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
-export default function App() {
+const EntryForm = () => {
   return (
-    <View style={styles.container}>
-      <Text>What did you learn today?</Text>
-      <StatusBar style="auto" />
+    <View>
       <TextInput
         style = {styles.TextInput}
         defaultValue = "Title"
@@ -15,6 +13,22 @@ export default function App() {
         style = {styles.TextInput}
         defaultValue = "Description"
       />
+      <Button
+        onPress={() => {
+          //Do Thing
+        }}
+        title="Add Entry"
+      />
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>What did you learn today?</Text>
+      <StatusBar style="auto" />
+      <EntryForm/>
     </View>
   );
 }
