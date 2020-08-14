@@ -2,6 +2,18 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
+const entry = {
+  title: "",
+  description: "",
+}
+
+const addEntry = async () => {
+  try {
+    await AsyncStorage.setItem()
+  }
+}
+
+// We define the form on the initial screen where users can add an entry.
 const EntryForm = () => {
   return (
     <View>
