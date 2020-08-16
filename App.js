@@ -3,54 +3,58 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage"
 
-const STORAGE_KEY = "example";
-
-const addEntry = async (title) => {
+const addEntry = async (entry, z) => {
   try {
-    await AsyncStorage.setItem(STORAGE_KEY, title);
+    await AsyncStorage.setItem(String(z), entry);
     alert("Entry successfully saved.");
   } catch(e) {
     alert("Entry failed to save.");
   }
 }
 
-const readEntry = async () => {
-  let x;
+const readEntry = async (z) => {
+  let result = new Array(z);
   try {
-    x = await AsyncStorage.getItem(STORAGE_KEY);
+    for (let i = 0; i < z; i++) {
+      result[i] = await AsyncStorage.getItem(String(i));
+    }
   } catch (e) {
-    x = "Error";
+    result = "Error";
     alert("Failed to fetch.")
   }
-  return x;
+  return result;
 }
 
 const EntryForm = () => {
-  const [title, setTitle] = useState("Title");
-  const [description, setDescription] = useState("Description");
+  const [entry, setEntry] = useState("Entry");
+  const [y, setY] = useState([]);
+  const [z, setZ] = useState(0);
   return (
     <View>
       <TextInput
         style = {styles.TextInput}
-        defaultValue = {title}
-        onChangeText = {title => setTitle(title)}
-      />
-      <TextInput
-        style = {styles.TextInput}
-        defaultValue = {description}
-        onChangeText = {description => setDescription(description)}
+        defaultValue = {entry}
+        onChangeText = {entry => setEntry(entry)}
       />
       <Button
         title="Add Entry"
         onPress={() => {
-          readEntry().then(function(result) {
-            console.log(result);
+          addEntry(entry, z);
+          let p = z + 1;
+          setZ(p);
+        }}
+      />
+      <Button
+        title="Read Data"
+        onPress={() => {
+          readEntry(z).then(function(result) {
+            setY(result);
           }, function(err) {
             console.log(err);
           })
-          addEntry(title);
         }}
       />
+      <Text>{JSON.stringify(y)}</Text>
     </View>
   );
 }
