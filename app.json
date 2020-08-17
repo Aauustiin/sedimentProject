@@ -2,6 +2,9 @@
   "name": "sedimentProject",
   "displayName": "sedimentProject",
   "expo": {
+    "android": {
+      "useNextNotificationsApi": true,
+    },
     "name": "sedimentProject",
     "slug": "sedimentProject",
     "version": "1.0.0",

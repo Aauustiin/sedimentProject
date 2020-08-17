@@ -1,7 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import AsyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from "@react-native-community/async-storage";
+import * as Notifications from 'expo-notifications';
+
+const testNotif = () => {
+  console.log("testNotif");
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Time's up!",
+      body: 'Change sides!',
+    },
+    trigger: {
+      seconds: 3,
+    },
+  });
+}
 
 const addEntry = async (entry, z) => {
   try {
@@ -60,6 +74,8 @@ const EntryForm = () => {
 }
 
 export default function App() {
+  console.log("App");
+  testNotif();
   return (
     <View style={styles.container}>
       <Text>What did you learn today?</Text>
