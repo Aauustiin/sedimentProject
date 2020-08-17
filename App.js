@@ -4,45 +4,62 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Notifications from 'expo-notifications';
 
-const testNotif = () => {
-  console.log("testNotif");
+// The days at which the user will be notified.
+const FIRST_REPITITION = 7;
+const SECOND_REPITITION = 28;
+const THIRD_REPITITION = 84;
+
+// Creates a notification with "message" in "days".
+const makeNotif = (message, days) => {
   Notifications.scheduleNotificationAsync({
     content: {
-      title: "Time's up!",
-      body: 'Change sides!',
+      title: "It's time to recap!",
+      body: message,
     },
     trigger: {
-      seconds: 3,
+      seconds: 60*60*24*days,
     },
   });
 }
 
-const addEntry = async (entry, z) => {
+const saveEntry = async (entry, index) => {
   try {
-    await AsyncStorage.setItem(String(z), entry);
-    alert("Entry successfully saved.");
+    await AsyncStorage.setItem(String(index), entry);
+    console.log("Entry successfully saved.");
   } catch(e) {
-    alert("Entry failed to save.");
+    console.log("Entry failed to save.");
   }
 }
 
-const readEntry = async (z) => {
-  let result = new Array(z);
+// Reads "count" entries from local storage.
+const readEntry = async (count) => {
+  let result = new Array(count);
   try {
-    for (let i = 0; i < z; i++) {
+    for (let i = 0; i < count; i++) {
       result[i] = await AsyncStorage.getItem(String(i));
     }
   } catch (e) {
     result = "Error";
-    alert("Failed to fetch.")
+    console.log("Failed to fetch.")
   }
   return result;
 }
 
+// Saves an entry to local storage, and creates notifications.
+const handleEntry = (entry, entryCount, setEntryCount) => {
+  saveEntry(entry, entryCount);
+  setEntryCount(entryCount + 1);
+  makeNotif(entry, FIRST_REPITITION);
+  makeNotif(entry, SECOND_REPITITION);
+  makeNotif(entry, THIRD_REPITITION);
+}
+
+// Form allowing the user to add data, and read data.
 const EntryForm = () => {
-  const [entry, setEntry] = useState("Entry");
-  const [y, setY] = useState([]);
-  const [z, setZ] = useState(0);
+  const [entry, setEntry] = useState("Entry"); // The current user input.
+  const [entryList, setEntryList] = useState([]); // The list of all inputs.
+  const [entryCount, setEntryCount] = useState(0); // The number of inputs.
+
   return (
     <View>
       <TextInput
@@ -53,29 +70,25 @@ const EntryForm = () => {
       <Button
         title="Add Entry"
         onPress={() => {
-          addEntry(entry, z);
-          let p = z + 1;
-          setZ(p);
+          handleEntry(entry, entryCount, setEntryCount);
         }}
       />
       <Button
         title="Read Data"
         onPress={() => {
-          readEntry(z).then(function(result) {
-            setY(result);
+          readEntry(entryCount).then(function(result) {
+            setEntryList(result);
           }, function(err) {
             console.log(err);
           })
         }}
       />
-      <Text>{JSON.stringify(y)}</Text>
+      <Text>{JSON.stringify(entryList)}</Text>
     </View>
   );
 }
 
 export default function App() {
-  console.log("App");
-  testNotif();
   return (
     <View style={styles.container}>
       <Text>What did you learn today?</Text>
