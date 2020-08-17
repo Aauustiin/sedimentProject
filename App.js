@@ -89,6 +89,15 @@ const EntryForm = () => {
 }
 
 export default function App() {
+  
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
   return (
     <View style={styles.container}>
       <Text>What did you learn today?</Text>
