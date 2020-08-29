@@ -33,9 +33,9 @@ const saveEntry = async (entry, index) => {
 
 // Reads "count" entries from local storage.
 const readEntry = async (count) => {
-  let result = new Array(count);
+  let result = new Array(count+1);
   try {
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i <= count; i++) {
       result[i] = await AsyncStorage.getItem(String(i));
     }
   } catch (e) {
@@ -46,12 +46,17 @@ const readEntry = async (count) => {
 }
 
 // Saves an entry to local storage, and creates notifications.
-const handleEntry = (entry, entryCount, setEntryCount) => {
+const handleEntry = (entry, entryCount, setEntryCount, setEntryList) => {
   saveEntry(entry, entryCount);
-  setEntryCount(entryCount + 1);
   makeNotif(entry, FIRST_REPITITION);
   makeNotif(entry, SECOND_REPITITION);
   makeNotif(entry, THIRD_REPITITION);
+  readEntry(entryCount).then(function(result) {
+    setEntryList(result);
+  }, function(err) {
+    console.log(err);
+  })
+  setEntryCount(entryCount + 1);
 }
 
 const EntryCard = ({item}) => <Text>{item.key}</Text>
@@ -72,17 +77,7 @@ const EntryForm = () => {
       <Button
         title="Add Entry"
         onPress={() => {
-          handleEntry(entry, entryCount, setEntryCount);
-        }}
-      />
-      <Button
-        title="Read Data"
-        onPress={() => {
-          readEntry(entryCount).then(function(result) {
-            setEntryList(result);
-          }, function(err) {
-            console.log(err);
-          })
+          handleEntry(entry, entryCount, setEntryCount, setEntryList);
         }}
       />
       <FlatList
