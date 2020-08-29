@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Notifications from 'expo-notifications';
 
@@ -42,7 +42,7 @@ const readEntry = async (count) => {
     result = "Error";
     console.log("Failed to fetch.")
   }
-  return result;
+  return result.map(a => b = {key: a});
 }
 
 // Saves an entry to local storage, and creates notifications.
@@ -53,6 +53,8 @@ const handleEntry = (entry, entryCount, setEntryCount) => {
   makeNotif(entry, SECOND_REPITITION);
   makeNotif(entry, THIRD_REPITITION);
 }
+
+const EntryCard = ({item}) => <Text>{item.key}</Text>
 
 // Form allowing the user to add data, and read data.
 const EntryForm = () => {
@@ -83,13 +85,16 @@ const EntryForm = () => {
           })
         }}
       />
-      <Text>{JSON.stringify(entryList)}</Text>
+      <FlatList
+        data={entryList}
+        renderItem={EntryCard}
+      />
     </View>
   );
 }
 
 export default function App() {
-  
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
